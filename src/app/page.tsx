@@ -13,24 +13,18 @@ const features = [
     title: "Browser Security Audit",
     description:
       "Comprehensive analysis of your browser's security settings, privacy features, and vulnerability exposure.",
-    color: "text-cyan-400",
-    bg: "bg-cyan-500/10",
   },
   {
     icon: Search,
     title: "Virus & Malware Scanner",
     description:
       "Upload files for instant client-side scanning using hash matching and heuristic analysis.",
-    color: "text-purple-400",
-    bg: "bg-purple-500/10",
   },
   {
     icon: Lock,
     title: "Privacy First",
     description:
       "Everything runs locally in your browser. We never collect, store, or transmit your data.",
-    color: "text-blue-400",
-    bg: "bg-blue-500/10",
   },
 ] as const;
 
@@ -61,27 +55,27 @@ export default function Home() {
   return (
     <div className="flex flex-col">
       {/* ── Hero Section ── */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#1e3a5f] via-[#1e40af] to-[#7c3aed] text-white">
-        {/* Decorative background rings */}
+      <section className="relative overflow-hidden bg-gray-950 text-white">
+        {/* Decorative background elements */}
         <div className="pointer-events-none absolute inset-0">
-          <div className="absolute -top-24 -right-24 h-96 w-96 rounded-full bg-cyan-500/10 blur-3xl" />
-          <div className="absolute -bottom-32 -left-32 h-[28rem] w-[28rem] rounded-full bg-purple-500/10 blur-3xl" />
+          <div className="absolute -top-24 -right-24 h-96 w-96 rounded-full bg-white/5 blur-3xl" />
+          <div className="absolute -bottom-32 -left-32 h-[28rem] w-[28rem] rounded-full bg-white/5 blur-3xl" />
         </div>
 
         <div className="relative mx-auto flex max-w-5xl flex-col items-center gap-8 px-4 py-24 text-center sm:px-6 sm:py-32 lg:py-40">
           {/* Animated shield icon */}
           <div className="animate-pulse-ring flex h-20 w-20 items-center justify-center rounded-full bg-white/10 ring-2 ring-white/20">
-            <ShieldCheck className="h-10 w-10 text-cyan-300" />
+            <ShieldCheck className="h-10 w-10 text-white" />
           </div>
 
           <h1 className="max-w-3xl text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
             Instant Browser Security Check{" "}
-            <span className="bg-gradient-to-r from-cyan-300 to-purple-300 bg-clip-text text-transparent">
+            <span className="text-gray-400">
               + Private Virus Scanner
             </span>
           </h1>
 
-          <p className="max-w-xl text-lg text-blue-100 sm:text-xl">
+          <p className="max-w-xl text-lg text-gray-400 sm:text-xl">
             All in Your Browser — 100% Private, Zero Data Sent
           </p>
 
@@ -91,7 +85,7 @@ export default function Home() {
               href="/dashboard"
               className={cn(
                 buttonVariants({ size: "lg" }),
-                "bg-cyan-500 text-white shadow-lg shadow-cyan-500/30 hover:bg-cyan-400"
+                "bg-white text-gray-900 shadow-lg hover:bg-gray-100"
               )}
             >
               Start Security Scan
@@ -101,7 +95,7 @@ export default function Home() {
               href="/how-it-works"
               className={cn(
                 buttonVariants({ variant: "outline", size: "lg" }),
-                "border-white/30 text-white hover:bg-white/10"
+                "border-white/20 text-white hover:bg-white/10"
               )}
             >
               Learn More
@@ -135,13 +129,13 @@ export default function Home() {
             {features.map((feature) => (
               <Card
                 key={feature.title}
-                className="border-gray-200 bg-white transition-shadow hover:shadow-lg dark:border-gray-800 dark:bg-gray-950"
+                className="border-gray-200 bg-white transition-all duration-200 hover:shadow-md dark:border-gray-800 dark:bg-gray-950"
               >
                 <CardHeader>
                   <div
-                    className={`mb-3 flex h-12 w-12 items-center justify-center rounded-lg ${feature.bg}`}
+                    className="mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800"
                   >
-                    <feature.icon className={`h-6 w-6 ${feature.color}`} />
+                    <feature.icon className="h-6 w-6 text-gray-700 dark:text-gray-300" />
                   </div>
                   <CardTitle className="text-xl">{feature.title}</CardTitle>
                   <CardDescription className="text-sm leading-relaxed">
@@ -169,7 +163,7 @@ export default function Home() {
           <div className="grid gap-10 sm:grid-cols-3">
             {steps.map((step) => (
               <div key={step.number} className="flex flex-col items-center text-center">
-                <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-purple-600 text-xl font-bold text-white shadow-md">
+                <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-gray-900 text-xl font-bold text-white shadow-sm dark:bg-gray-100 dark:text-gray-900">
                   {step.number}
                 </div>
                 <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-white">
@@ -185,19 +179,19 @@ export default function Home() {
       </section>
 
       {/* ── Final CTA Section ── */}
-      <section className="bg-gradient-to-br from-[#1e3a5f] via-[#1e40af] to-[#7c3aed] text-white">
+      <section className="bg-gray-950 text-white">
         <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 px-4 py-20 text-center sm:px-6 lg:py-28">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
             Ready to Check Your Security?
           </h2>
-          <p className="text-lg text-blue-100">
+          <p className="text-lg text-gray-400">
             No sign-up required. Your data never leaves your device.
           </p>
           <Link
             href="/dashboard"
             className={cn(
               buttonVariants({ size: "lg" }),
-              "bg-cyan-500 text-white shadow-lg shadow-cyan-500/30 hover:bg-cyan-400"
+              "bg-white text-gray-900 shadow-lg hover:bg-gray-100"
             )}
           >
             Start Free Scan

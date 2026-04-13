@@ -8,9 +8,9 @@ interface SecurityScoreProps {
 }
 
 function scoreColor(score: number) {
-  if (score >= 75) return { stroke: "#22c55e", text: "text-green-500" };
-  if (score >= 50) return { stroke: "#eab308", text: "text-yellow-500" };
-  return { stroke: "#ef4444", text: "text-red-500" };
+  if (score >= 75) return { stroke: "#404040", text: "text-gray-700 dark:text-gray-300" };
+  if (score >= 50) return { stroke: "#737373", text: "text-gray-500 dark:text-gray-400" };
+  return { stroke: "#171717", text: "text-gray-900 dark:text-gray-100" };
 }
 
 function scoreLabel(score: number) {

@@ -18,7 +18,7 @@ export function Header() {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
-          <Shield className="h-7 w-7 text-blue-700 dark:text-blue-400" />
+          <Shield className="h-7 w-7 text-gray-900 dark:text-gray-100" />
           <span className="text-lg font-bold text-gray-900 dark:text-white">
             CheckYourWeb
           </span>
