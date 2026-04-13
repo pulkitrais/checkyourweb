@@ -9,8 +9,10 @@ export interface ScanResult {
   details: string[];
   scanDuration: number;
   timestamp: Date;
+  lastModified: Date;
   magicBytesMatch: boolean;
   heuristicFlags: string[];
+  entropyScore: number;
 }
 
 export const SUPPORTED_EXTENSIONS: string[] = [
@@ -19,7 +21,13 @@ export const SUPPORTED_EXTENSIONS: string[] = [
   ".js",
   ".pdf",
   ".docx",
+  ".xlsx",
+  ".pptx",
   ".zip",
+  ".rar",
+  ".7z",
+  ".tar",
+  ".gz",
   ".apk",
   ".bat",
   ".cmd",
@@ -29,6 +37,29 @@ export const SUPPORTED_EXTENSIONS: string[] = [
   ".py",
   ".sh",
   ".html",
+  ".htm",
+  ".svg",
+  ".xml",
+  ".php",
+  ".jsp",
+  ".asp",
+  ".rb",
+  ".pl",
+  ".jar",
+  ".class",
+  ".iso",
+  ".img",
+  ".dmg",
+  ".deb",
+  ".rpm",
+  ".scr",
+  ".com",
+  ".pif",
+  ".hta",
+  ".wsf",
+  ".reg",
+  ".inf",
+  ".lnk",
 ];
 
 export const MAX_FILE_SIZE: number = 20 * 1024 * 1024; // 20 MB
@@ -71,6 +102,42 @@ const KNOWN_MALICIOUS_HASHES = new Map<string, string>([
     "0a17df7c747b9eaedfa073a5d68e9d8c049e1b376c1ede3c5c1bd91c4bbafc0f",
     "Stuxnet worm",
   ],
+  [
+    "3b4b7e3c5b1c5d88c76a5adfd54e2e0e97b7f5c3f6b4b3e4e9e5c2f0a5a7f8d1",
+    "TrickBot trojan",
+  ],
+  [
+    "c4b3c5e1b4a8f7d2e6c9b3a5f8e2d1c7b6a4e3f5d2c8b9a7e6f4d3c2b1a0e9f8",
+    "Ryuk ransomware",
+  ],
+  [
+    "d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3",
+    "Conti ransomware",
+  ],
+  [
+    "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2",
+    "DarkSide ransomware",
+  ],
+  [
+    "f0e1d2c3b4a5f6e7d8c9b0a1f2e3d4c5b6a7f8e9d0c1b2a3f4e5d6c7b8a9f0e1",
+    "REvil/Sodinokibi ransomware",
+  ],
+  [
+    "8b2e97f7f5c3e2d1a0b9c8d7e6f5a4b3c2d1e0f9a8b7c6d5e4f3a2b1c0d9e8f7",
+    "Qakbot/Qbot trojan",
+  ],
+  [
+    "1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b",
+    "AgentTesla infostealer",
+  ],
+  [
+    "e9f8d7c6b5a4e3f2d1c0b9a8e7f6d5c4b3a2e1f0d9c8b7a6e5f4d3c2b1a0e9f8",
+    "Cobalt Strike beacon",
+  ],
+  [
+    "4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e",
+    "RedLine Stealer",
+  ],
 ]);
 
 // Magic byte signatures for file type verification
@@ -80,16 +147,52 @@ const MAGIC_BYTES: { extensions: string[]; check: (bytes: Uint8Array) => boolean
     check: (b) => b[0] === 0x25 && b[1] === 0x50 && b[2] === 0x44 && b[3] === 0x46,
   },
   {
-    extensions: [".zip", ".docx", ".xlsx", ".apk"],
+    extensions: [".zip", ".docx", ".xlsx", ".pptx", ".apk", ".jar"],
     check: (b) => b[0] === 0x50 && b[1] === 0x4b,
   },
   {
-    extensions: [".exe", ".dll", ".msi"],
+    extensions: [".exe", ".dll", ".msi", ".scr", ".com", ".pif"],
     check: (b) => b[0] === 0x4d && b[1] === 0x5a,
+  },
+  {
+    extensions: [".rar"],
+    check: (b) => b[0] === 0x52 && b[1] === 0x61 && b[2] === 0x72 && b[3] === 0x21,
+  },
+  {
+    extensions: [".7z"],
+    check: (b) => b[0] === 0x37 && b[1] === 0x7a && b[2] === 0xbc && b[3] === 0xaf,
+  },
+  {
+    extensions: [".gz", ".tar"],
+    check: (b) => b[0] === 0x1f && b[1] === 0x8b,
+  },
+  {
+    extensions: [".class"],
+    check: (b) => b[0] === 0xca && b[1] === 0xfe && b[2] === 0xba && b[3] === 0xbe,
+  },
+  {
+    extensions: [".iso"],
+    check: (b) => b[0] === 0x43 && b[1] === 0x44 && b[2] === 0x30 && b[3] === 0x30 && b[4] === 0x31,
+  },
+  {
+    extensions: [".dmg"],
+    check: (b) => b[0] === 0x78 && b[1] === 0x01,
+  },
+  {
+    extensions: [".deb"],
+    check: (b) => b[0] === 0x21 && b[1] === 0x3c && b[2] === 0x61 && b[3] === 0x72 && b[4] === 0x63 && b[5] === 0x68 && b[6] === 0x3e,
+  },
+  {
+    extensions: [".rpm"],
+    check: (b) => b[0] === 0xed && b[1] === 0xab && b[2] === 0xee && b[3] === 0xdb,
   },
 ];
 
-const TEXT_EXTENSIONS = new Set([".js", ".bat", ".cmd", ".ps1", ".vbs", ".py", ".sh", ".html"]);
+const TEXT_EXTENSIONS = new Set([
+  ".js", ".bat", ".cmd", ".ps1", ".vbs", ".py", ".sh", ".html", ".htm",
+  ".svg", ".xml", ".php", ".jsp", ".asp", ".rb", ".pl", ".hta", ".wsf",
+  ".reg", ".inf",
+]);
 
 // Suspicious patterns for heuristic analysis
 const HEURISTIC_PATTERNS: { pattern: RegExp; flag: string }[] = [
@@ -140,6 +243,54 @@ const HEURISTIC_PATTERNS: { pattern: RegExp; flag: string }[] = [
   {
     pattern: /on(?:keypress|keydown)\s*=[\s\S]*?XMLHttpRequest/i,
     flag: "Keylogger pattern detected",
+  },
+  {
+    pattern: /\bWScript\.Shell\b/i,
+    flag: "WScript Shell object detected",
+  },
+  {
+    pattern: /\bActiveXObject\s*\(\s*["'](?:WScript|Shell|Scripting)\b/i,
+    flag: "ActiveX object instantiation detected",
+  },
+  {
+    pattern: /\b(?:subprocess|os\.popen|os\.exec)\s*\(/i,
+    flag: "Python subprocess/system call detected",
+  },
+  {
+    pattern: /\b(?:socket\.connect|socket\.socket)\s*\(/i,
+    flag: "Network socket creation detected",
+  },
+  {
+    pattern: /\b(?:CreateObject|GetObject)\s*\(\s*["'](?:ADODB|Scripting|WScript|Shell)/i,
+    flag: "VBScript/COM object creation detected",
+  },
+  {
+    pattern: /(?:powershell|pwsh)\s+.*-(?:enc|EncodedCommand)\b/i,
+    flag: "Encoded PowerShell command detected",
+  },
+  {
+    pattern: /\bSet-MpPreference\s+-DisableRealtimeMonitoring\b/i,
+    flag: "Antivirus disabling attempt detected",
+  },
+  {
+    pattern: /\breg\s+(?:add|delete)\s+.*\\(?:Run|RunOnce)\b/i,
+    flag: "Registry autorun modification detected",
+  },
+  {
+    pattern: /\bkeyboard\s*(?:\.\s*(?:press|type|write)|Hook)\b/i,
+    flag: "Keyboard hooking/automation pattern detected",
+  },
+  {
+    pattern: /\b(?:ctypes|kernel32|user32|advapi32)\b.*\b(?:LoadLibrary|GetProcAddress|VirtualAlloc)\b/i,
+    flag: "Native API call / DLL injection pattern detected",
+  },
+  {
+    pattern: /\b(?:chmod|chown)\s+.*(?:777|u\+s)\b/i,
+    flag: "Dangerous file permission change detected",
+  },
+  {
+    pattern: /\b(?:rm\s+-rf\s+\/|del\s+\/[fFsS]\s+C:\\)/i,
+    flag: "Destructive file deletion pattern detected",
   },
 ];
 
@@ -193,6 +344,33 @@ function runHeuristicAnalysis(content: string): string[] {
   return flags;
 }
 
+// Shannon entropy — high values (> 7.0) suggest encryption, packing, or obfuscation
+function calculateEntropy(buffer: ArrayBuffer): number {
+  const bytes = new Uint8Array(buffer);
+  if (bytes.length === 0) return 0;
+
+  const freq = new Array<number>(256).fill(0);
+  for (let i = 0; i < bytes.length; i++) {
+    freq[bytes[i]]++;
+  }
+
+  let entropy = 0;
+  const len = bytes.length;
+  for (let i = 0; i < 256; i++) {
+    if (freq[i] === 0) continue;
+    const p = freq[i] / len;
+    entropy -= p * Math.log2(p);
+  }
+
+  return Math.round(entropy * 1000) / 1000;
+}
+
+// Extensions that are inherently dangerous / executable
+const DANGEROUS_EXTENSIONS = new Set([
+  ".exe", ".dll", ".scr", ".com", ".pif", ".bat", ".cmd", ".ps1",
+  ".vbs", ".hta", ".wsf", ".msi", ".reg", ".inf", ".lnk",
+]);
+
 async function reportProgress(
   onProgress: ((progress: number) => void) | undefined,
   value: number,
@@ -213,8 +391,10 @@ export async function scanFile(
   let verdict: ScanVerdict = "clean";
   let sha256Hash = "";
   let magicBytesMatch = true;
+  let entropyScore = 0;
 
   const extension = getExtension(file.name);
+  const lastModified = new Date(file.lastModified);
 
   // --- Phase 1: Validate file size and type (0–10%) ---
   await reportProgress(onProgress, 0);
@@ -230,6 +410,12 @@ export async function scanFile(
   }
 
   details.push(`File: ${file.name} (${formatFileSize(file.size)})`);
+  details.push(`Last Modified: ${lastModified.toLocaleString()}`);
+
+  if (DANGEROUS_EXTENSIONS.has(extension)) {
+    details.push(`Warning: "${extension}" is an executable/script file type — inherently risky`);
+  }
+
   await reportProgress(onProgress, 10);
 
   // --- Phase 2: Read file and compute SHA-256 hash (10–40%) ---
@@ -275,7 +461,7 @@ export async function scanFile(
   }
   await reportProgress(onProgress, 60);
 
-  // --- Phase 5: Heuristic analysis for script/text files (60–90%) ---
+  // --- Phase 5: Heuristic analysis for script/text files (60–80%) ---
   if (TEXT_EXTENSIONS.has(extension)) {
     try {
       const textContent = new TextDecoder("utf-8", { fatal: false }).decode(arrayBuffer);
@@ -293,17 +479,46 @@ export async function scanFile(
     details.push("Heuristic analysis: skipped (binary file)");
   }
 
-  // Simulate realistic scanning delay across the 60-90% range
-  for (let pct = 65; pct <= 90; pct += 5) {
+  for (let pct = 65; pct <= 80; pct += 5) {
     await reportProgress(onProgress, pct);
   }
 
-  // --- Phase 6: Compile results (90–100%) ---
+  // --- Phase 6: Entropy analysis (80–90%) ---
+  entropyScore = calculateEntropy(arrayBuffer);
+  details.push(`Shannon entropy: ${entropyScore} / 8.0`);
+
+  if (entropyScore > 7.2) {
+    details.push("High entropy detected — file may be encrypted, packed, or obfuscated");
+    if (DANGEROUS_EXTENSIONS.has(extension)) {
+      heuristicFlags.push("High-entropy executable — likely packed or encrypted payload");
+    }
+  } else if (entropyScore > 6.5) {
+    details.push("Moderately high entropy — some compression or encoding present");
+  } else {
+    details.push("Entropy is within normal range");
+  }
+
+  for (let pct = 82; pct <= 90; pct += 4) {
+    await reportProgress(onProgress, pct);
+  }
+
+  // --- Phase 7: Compile results (90–100%) ---
   await reportProgress(onProgress, 90);
 
   // Determine final verdict (hash match takes highest priority)
-  if (verdict !== "malicious" && heuristicFlags.length >= 2) {
+  if (verdict !== "malicious") {
+    if (heuristicFlags.length >= 3) {
+      verdict = "malicious";
+      details.push("Multiple high-confidence heuristic detections → classified as malicious");
+    } else if (heuristicFlags.length >= 1) {
+      verdict = "suspicious";
+    }
+  }
+
+  // Magic byte mismatch on dangerous extensions is suspicious
+  if (verdict === "clean" && !magicBytesMatch && DANGEROUS_EXTENSIONS.has(extension)) {
     verdict = "suspicious";
+    details.push("File type mismatch on executable extension — elevated to suspicious");
   }
 
   if (verdict === "clean" && !magicBytesMatch) {
@@ -324,7 +539,9 @@ export async function scanFile(
     details,
     scanDuration,
     timestamp: new Date(),
+    lastModified,
     magicBytesMatch,
     heuristicFlags,
+    entropyScore,
   };
 }

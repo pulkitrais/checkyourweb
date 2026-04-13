@@ -18,6 +18,11 @@ import {
   ServerOff,
   Trash2,
   GitBranch,
+  Link2,
+  Shield,
+  FileSearch,
+  BarChart3,
+  ShieldCheck,
 } from "lucide-react";
 import {
   Card,
@@ -31,7 +36,7 @@ import { Badge } from "@/components/ui/badge";
 export const metadata = {
   title: "How It Works - CheckYourWeb",
   description:
-    "Learn how CheckYourWeb performs browser security audits and virus scanning, all within your browser.",
+    "Learn how CheckYourWeb performs browser security audits, virus scanning, and URL safety checks, all within your browser.",
 };
 
 const browserChecks = [
@@ -89,6 +94,18 @@ const browserChecks = [
     description:
       "Scans for insecure HTTP resources loaded on HTTPS pages. Mixed content weakens your encrypted connection and can allow attackers to inject malicious scripts or images.",
   },
+  {
+    icon: ShieldCheck,
+    title: "Content Security Policy",
+    description:
+      "Checks if the page implements a Content Security Policy (CSP). CSP is a powerful defense against XSS and data injection attacks by controlling which resources can be loaded.",
+  },
+  {
+    icon: EyeOff,
+    title: "Referrer Policy",
+    description:
+      "Verifies that a strict Referrer Policy is in place to prevent leaking sensitive URL information to third-party sites when navigating away from a page.",
+  },
 ] as const;
 
 const scannerSteps = [
@@ -114,13 +131,58 @@ const scannerSteps = [
     icon: Code,
     title: "Heuristic Analysis for Scripts",
     description:
-      "Script files are analyzed for suspicious patterns like obfuscated code, eval() calls, encoded payloads, and known exploit signatures. This catches novel threats that aren't yet in hash databases.",
+      "Script files are analyzed for 25+ suspicious patterns like obfuscated code, eval() calls, encoded payloads, registry modifications, and known exploit signatures. This catches novel threats that aren't yet in hash databases.",
+  },
+  {
+    icon: BarChart3,
+    title: "Entropy Analysis",
+    description:
+      "Shannon entropy is calculated to detect encrypted, packed, or obfuscated content. High-entropy executables are flagged as potentially dangerous, as malware authors often pack payloads to evade signature-based detection.",
   },
   {
     icon: CheckCircle,
     title: "Verdict Determination",
     description:
-      "Results from all analysis stages are combined to produce a final verdict. Files are classified as Clean (no threats found), Suspicious (potential risk detected), or Malicious (confirmed threat).",
+      "Results from all analysis stages are combined to produce a final verdict. Files are classified as Clean (no threats found), Suspicious (potential risk detected), or Malicious (confirmed threat). File last modified timestamps are also reported.",
+  },
+] as const;
+
+const urlCheckerSteps = [
+  {
+    icon: Globe,
+    title: "Protocol & Encryption Check",
+    description:
+      "Verifies whether the URL uses HTTPS for encrypted communication. HTTP URLs transmit data in plain text and are flagged as dangerous.",
+  },
+  {
+    icon: Database,
+    title: "Known Malicious Domain Check",
+    description:
+      "The domain is compared against a database of known malicious and phishing domains. A match immediately flags the URL as dangerous.",
+  },
+  {
+    icon: Link2,
+    title: "Structural Analysis",
+    description:
+      "Examines URL structure for red flags: IP-based addresses, excessive subdomains, non-standard ports, deceptive @ symbols, and suspiciously long URLs.",
+  },
+  {
+    icon: Shield,
+    title: "IDN Homograph Detection",
+    description:
+      "Detects internationalized domain names (IDN) containing non-ASCII characters that visually mimic legitimate domains — a common phishing technique.",
+  },
+  {
+    icon: FileSearch,
+    title: "Phishing Pattern Analysis",
+    description:
+      "Scans for brand-name impersonation in subdomains and credential-harvesting path patterns (login, verify, confirm) commonly used in phishing attacks.",
+  },
+  {
+    icon: CheckCircle,
+    title: "Safety Verdict",
+    description:
+      "All check results are combined with weighted scoring to produce a safety score (0–100) and a final verdict: Safe, Caution, or Dangerous.",
   },
 ] as const;
 
@@ -160,7 +222,7 @@ export default function HowItWorks() {
               Browser Security Checks
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-gray-600 dark:text-gray-400">
-              We analyze nine critical aspects of your browser configuration to
+              We analyze eleven critical aspects of your browser configuration to
               give you a comprehensive security score.
             </p>
           </div>
@@ -244,6 +306,64 @@ export default function HowItWorks() {
             <Badge variant="success">✓ Clean</Badge>
             <Badge variant="warning">⚠ Suspicious</Badge>
             <Badge variant="destructive">✕ Malicious</Badge>
+          </div>
+        </div>
+      </section>
+
+      {/* ── URL Checker Section ── */}
+      <section className="bg-gray-50 dark:bg-gray-900">
+        <div className="mx-auto max-w-5xl px-4 py-20 sm:px-6 lg:py-28">
+          <div className="mb-14 text-center">
+            <Badge variant="secondary" className="mb-4">
+              URL Checker
+            </Badge>
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
+              URL Safety Analysis
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-gray-600 dark:text-gray-400">
+              Analyze any URL before clicking — our multi-layered checks detect
+              phishing, malware distribution, and social engineering attacks.
+            </p>
+          </div>
+
+          <div className="space-y-6">
+            {urlCheckerSteps.map((step, index) => (
+              <Card
+                key={step.title}
+                className="border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950"
+              >
+                <CardContent className="flex items-start gap-5 pt-6">
+                  <div className="flex shrink-0 flex-col items-center gap-2">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-900 text-sm font-bold text-white dark:bg-gray-100 dark:text-gray-900">
+                      {index + 1}
+                    </div>
+                    <div
+                      className="flex h-12 w-12 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800"
+                    >
+                      <step.icon className="h-6 w-6 text-gray-700 dark:text-gray-300" />
+                    </div>
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                      {step.title}
+                    </h3>
+                    <p className="mt-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                      {step.description}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {/* Verdict badges */}
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+            <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
+              Possible verdicts:
+            </span>
+            <Badge variant="success">✓ Safe</Badge>
+            <Badge variant="warning">⚠ Caution</Badge>
+            <Badge variant="destructive">✕ Dangerous</Badge>
           </div>
         </div>
       </section>

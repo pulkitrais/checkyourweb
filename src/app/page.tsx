@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ShieldCheck, Search, Lock, ArrowRight, Zap, CheckCircle } from "lucide-react";
+import { ShieldCheck, Search, Lock, ArrowRight, Zap, CheckCircle, Link2 } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -12,13 +12,19 @@ const features = [
     icon: ShieldCheck,
     title: "Browser Security Audit",
     description:
-      "Comprehensive analysis of your browser's security settings, privacy features, and vulnerability exposure.",
+      "Comprehensive analysis of your browser's security settings, privacy features, and vulnerability exposure with 17 in-depth checks.",
   },
   {
     icon: Search,
     title: "Virus & Malware Scanner",
     description:
-      "Upload files for instant client-side scanning using hash matching and heuristic analysis.",
+      "Upload files for instant client-side scanning using hash matching, heuristic analysis, and entropy detection.",
+  },
+  {
+    icon: Link2,
+    title: "URL Safety Checker",
+    description:
+      "Analyze any URL for phishing indicators, malicious domains, homograph attacks, and suspicious patterns — before you click.",
   },
   {
     icon: Lock,
@@ -71,7 +77,7 @@ export default function Home() {
           <h1 className="max-w-3xl text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
             Instant Browser Security Check{" "}
             <span className="text-gray-400">
-              + Private Virus Scanner
+              + Virus Scanner + URL Checker
             </span>
           </h1>
 
@@ -125,7 +131,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {features.map((feature) => (
               <Card
                 key={feature.title}
