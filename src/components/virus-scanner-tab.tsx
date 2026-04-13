@@ -56,27 +56,27 @@ function verdictConfig(verdict: ScanResult["verdict"]) {
       return {
         icon: CheckCircle,
         label: "Clean",
-        border: "border-green-500/40",
-        bg: "bg-green-50 dark:bg-green-950/30",
-        text: "text-green-600 dark:text-green-400",
+        border: "border-gray-300 dark:border-gray-700",
+        bg: "bg-gray-50 dark:bg-gray-900",
+        text: "text-gray-700 dark:text-gray-300",
         badge: "success" as const,
       };
     case "suspicious":
       return {
         icon: AlertTriangle,
         label: "Suspicious",
-        border: "border-yellow-500/40",
-        bg: "bg-yellow-50 dark:bg-yellow-950/30",
-        text: "text-yellow-600 dark:text-yellow-400",
+        border: "border-gray-400 dark:border-gray-600",
+        bg: "bg-gray-100 dark:bg-gray-800",
+        text: "text-gray-600 dark:text-gray-400",
         badge: "warning" as const,
       };
     case "malicious":
       return {
         icon: XCircle,
         label: "Malicious",
-        border: "border-red-500/40",
-        bg: "bg-red-50 dark:bg-red-950/30",
-        text: "text-red-600 dark:text-red-400",
+        border: "border-gray-900 dark:border-gray-100",
+        bg: "bg-gray-100 dark:bg-gray-900",
+        text: "text-gray-900 dark:text-gray-100",
         badge: "destructive" as const,
       };
   }
@@ -236,16 +236,16 @@ export function VirusScannerTab() {
             onDrop={onDrop}
             onDragOver={onDragOver}
             onDragLeave={onDragLeave}
-            className={`flex cursor-pointer flex-col items-center justify-center gap-4 rounded-xl border-2 border-dashed p-12 transition-colors ${
+            className={`flex cursor-pointer flex-col items-center justify-center gap-4 rounded-xl border-2 border-dashed p-12 transition-all duration-200 ${
               dragOver
-                ? "border-blue-500 bg-blue-50 dark:bg-blue-950/20"
+                ? "border-gray-900 bg-gray-50 dark:border-gray-100 dark:bg-gray-900"
                 : "border-gray-300 hover:border-gray-400 dark:border-gray-700 dark:hover:border-gray-600"
             }`}
           >
             <Upload
               className={`h-12 w-12 ${
                 dragOver
-                  ? "text-blue-500"
+                  ? "text-gray-900 dark:text-gray-100"
                   : "text-gray-400 dark:text-gray-500"
               }`}
             />
@@ -386,7 +386,7 @@ export function VirusScannerTab() {
                         <Copy className="h-4 w-4" />
                       </Button>
                       {copied && (
-                        <span className="text-xs text-green-600">Copied!</span>
+                        <span className="text-xs text-gray-600 dark:text-gray-400">Copied!</span>
                       )}
                     </div>
                   </div>
@@ -403,7 +403,7 @@ export function VirusScannerTab() {
                             key={flag}
                             className="flex items-start gap-2 text-sm"
                           >
-                            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-yellow-500" />
+                            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-gray-500" />
                             {flag}
                           </li>
                         ))}

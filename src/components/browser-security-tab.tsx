@@ -213,7 +213,7 @@ export function BrowserSecurityTab() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg">
-                <ShieldCheck className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                <ShieldCheck className="h-5 w-5 text-gray-700 dark:text-gray-300" />
                 Audit Results
               </CardTitle>
               <CardDescription>
@@ -267,7 +267,7 @@ export function BrowserSecurityTab() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg">
-                  <Lightbulb className="h-5 w-5 text-yellow-500" />
+                  <Lightbulb className="h-5 w-5 text-gray-500" />
                   Recommendations
                 </CardTitle>
                 <CardDescription>
@@ -282,7 +282,7 @@ export function BrowserSecurityTab() {
                       key={check.id}
                       className="flex items-start gap-3 rounded-lg border border-gray-200 p-3 dark:border-gray-800"
                     >
-                      <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0 text-yellow-500" />
+                      <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0 text-gray-500" />
                       <div>
                         <p className="text-sm font-medium">
                           {check.name}{" "}

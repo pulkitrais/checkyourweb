@@ -29,8 +29,6 @@ const sections = [
     id: "introduction",
     icon: Shield,
     title: "1. Introduction",
-    color: "text-cyan-400",
-    bg: "bg-cyan-500/10",
     content: (
       <>
         <p>
@@ -53,8 +51,6 @@ const sections = [
     id: "data-collection",
     icon: Eye,
     title: "2. Data Collection",
-    color: "text-blue-400",
-    bg: "bg-blue-500/10",
     content: (
       <>
         <p>
@@ -81,8 +77,6 @@ const sections = [
     id: "browser-security",
     icon: Globe,
     title: "3. Browser Security Checks",
-    color: "text-green-400",
-    bg: "bg-green-500/10",
     content: (
       <>
         <p>
@@ -103,8 +97,6 @@ const sections = [
     id: "file-scanning",
     icon: FileSearch,
     title: "4. File Scanning",
-    color: "text-purple-400",
-    bg: "bg-purple-500/10",
     content: (
       <>
         <p>
@@ -138,8 +130,6 @@ const sections = [
     id: "cookies-storage",
     icon: HardDrive,
     title: "5. Cookies & Storage",
-    color: "text-yellow-400",
-    bg: "bg-yellow-500/10",
     content: (
       <>
         <p>
@@ -160,8 +150,6 @@ const sections = [
     id: "third-party",
     icon: Users,
     title: "6. Third-Party Services",
-    color: "text-red-400",
-    bg: "bg-red-500/10",
     content: (
       <>
         <p>
@@ -189,8 +177,6 @@ const sections = [
     id: "changes",
     icon: RefreshCw,
     title: "7. Changes to This Policy",
-    color: "text-indigo-400",
-    bg: "bg-indigo-500/10",
     content: (
       <p>
         If we make changes to this privacy policy, we will update it on this
@@ -204,8 +190,6 @@ const sections = [
     id: "contact",
     icon: Mail,
     title: "8. Contact",
-    color: "text-pink-400",
-    bg: "bg-pink-500/10",
     content: (
       <>
         <p>
@@ -227,10 +211,10 @@ export default function Privacy() {
   return (
     <div className="flex flex-col">
       {/* ── Page Header ── */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#1e3a5f] via-[#1e40af] to-[#7c3aed] text-white">
+      <section className="relative overflow-hidden bg-gray-950 text-white">
         <div className="pointer-events-none absolute inset-0">
-          <div className="absolute -top-24 -right-24 h-96 w-96 rounded-full bg-cyan-500/10 blur-3xl" />
-          <div className="absolute -bottom-32 -left-32 h-[28rem] w-[28rem] rounded-full bg-purple-500/10 blur-3xl" />
+          <div className="absolute -top-24 -right-24 h-96 w-96 rounded-full bg-white/5 blur-3xl" />
+          <div className="absolute -bottom-32 -left-32 h-[28rem] w-[28rem] rounded-full bg-white/5 blur-3xl" />
         </div>
 
         <div className="relative mx-auto flex max-w-5xl flex-col items-center gap-6 px-4 py-20 text-center sm:px-6 sm:py-28 lg:py-32">
@@ -240,11 +224,11 @@ export default function Privacy() {
           <h1 className="max-w-3xl text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">
             Privacy Policy
           </h1>
-          <p className="max-w-2xl text-lg text-blue-100 sm:text-xl">
+          <p className="max-w-2xl text-lg text-gray-400 sm:text-xl">
             CheckYourWeb is built on a simple promise — everything runs locally
             in your browser with absolutely zero data collection.
           </p>
-          <p className="text-sm text-blue-200">Last updated: June 2025</p>
+          <p className="text-sm text-gray-500">Last updated: June 2025</p>
         </div>
       </section>
 
@@ -261,10 +245,10 @@ export default function Privacy() {
                 <CardHeader>
                   <div className="flex items-center gap-3">
                     <div
-                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${section.bg}`}
+                      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800"
                     >
                       <section.icon
-                        className={`h-5 w-5 ${section.color}`}
+                        className="h-5 w-5 text-gray-700 dark:text-gray-300"
                       />
                     </div>
                     <CardTitle className="text-xl">{section.title}</CardTitle>
@@ -280,18 +264,18 @@ export default function Privacy() {
       </section>
 
       {/* ── CTA Section ── */}
-      <section className="bg-gradient-to-br from-[#1e3a5f] via-[#1e40af] to-[#7c3aed] text-white">
+      <section className="bg-gray-950 text-white">
         <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 px-4 py-20 text-center sm:px-6 lg:py-28">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
             Privacy You Can Trust
           </h2>
-          <p className="text-lg text-blue-100">
+          <p className="text-lg text-gray-400">
             See our privacy-first approach in action. Run a security scan — no
             sign-up, no data collected.
           </p>
           <Link
             href="/dashboard"
-            className="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium h-11 px-8 bg-cyan-500 text-white shadow-lg shadow-cyan-500/30 hover:bg-cyan-400 transition-colors"
+            className="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium h-11 px-8 bg-white text-gray-900 shadow-lg hover:bg-gray-100 transition-all duration-200"
           >
             Start Security Scan
             <ArrowRight className="ml-2 h-4 w-4" />
