@@ -38,19 +38,22 @@ function applyTheme(resolved: "light" | "dark") {
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>("system");
-  const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">("light");
-
-  // Read stored theme on mount
-  useEffect(() => {
+  const [theme, setThemeState] = useState<Theme>(() => {
+    if (typeof window === "undefined") return "system";
+    const stored = localStorage.getItem(STORAGE_KEY) as Theme | null;
+    return stored ?? "system";
+  });
+  const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">(() => {
+    if (typeof window === "undefined") return "light";
     const stored = localStorage.getItem(STORAGE_KEY) as Theme | null;
     const initial = stored ?? "system";
-    setThemeState(initial);
+    return initial === "system" ? getSystemTheme() : initial;
+  });
 
-    const resolved = initial === "system" ? getSystemTheme() : initial;
-    setResolvedTheme(resolved);
-    applyTheme(resolved);
-  }, []);
+  // Apply theme on mount
+  useEffect(() => {
+    applyTheme(resolvedTheme);
+  }, [resolvedTheme]);
 
   // Listen for system theme changes when in "system" mode
   useEffect(() => {

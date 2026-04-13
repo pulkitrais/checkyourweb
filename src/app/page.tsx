@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { ShieldCheck, Search, Lock, ArrowRight, Zap, CheckCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { buttonVariants } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 const features = [
   {
@@ -86,24 +87,25 @@ export default function Home() {
 
           {/* CTA buttons */}
           <div className="flex flex-col gap-4 sm:flex-row">
-            <Button
-              asChild
-              size="lg"
-              className="bg-cyan-500 text-white shadow-lg shadow-cyan-500/30 hover:bg-cyan-400"
+            <Link
+              href="/dashboard"
+              className={cn(
+                buttonVariants({ size: "lg" }),
+                "bg-cyan-500 text-white shadow-lg shadow-cyan-500/30 hover:bg-cyan-400"
+              )}
             >
-              <Link href="/dashboard">
-                Start Security Scan
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-            <Button
-              asChild
-              variant="outline"
-              size="lg"
-              className="border-white/30 text-white hover:bg-white/10"
+              Start Security Scan
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+            <Link
+              href="/how-it-works"
+              className={cn(
+                buttonVariants({ variant: "outline", size: "lg" }),
+                "border-white/30 text-white hover:bg-white/10"
+              )}
             >
-              <Link href="/how-it-works">Learn More</Link>
-            </Button>
+              Learn More
+            </Link>
           </div>
 
           {/* Trust indicators */}
@@ -191,16 +193,16 @@ export default function Home() {
           <p className="text-lg text-blue-100">
             No sign-up required. Your data never leaves your device.
           </p>
-          <Button
-            asChild
-            size="lg"
-            className="bg-cyan-500 text-white shadow-lg shadow-cyan-500/30 hover:bg-cyan-400"
+          <Link
+            href="/dashboard"
+            className={cn(
+              buttonVariants({ size: "lg" }),
+              "bg-cyan-500 text-white shadow-lg shadow-cyan-500/30 hover:bg-cyan-400"
+            )}
           >
-            <Link href="/dashboard">
-              Start Free Scan
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
+            Start Free Scan
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Link>
         </div>
       </section>
     </div>

@@ -19,7 +19,6 @@ import {
   Trash2,
   GitBranch,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardHeader,
@@ -359,16 +358,13 @@ export default function HowItWorks() {
             No sign-up, no downloads, no data collected. Just instant security
             insights.
           </p>
-          <Button
-            asChild
-            size="lg"
-            className="bg-cyan-500 text-white shadow-lg shadow-cyan-500/30 hover:bg-cyan-400"
+          <Link
+            href="/dashboard"
+            className="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium h-11 px-8 bg-cyan-500 text-white shadow-lg shadow-cyan-500/30 hover:bg-cyan-400 transition-colors"
           >
-            <Link href="/dashboard">
-              Start Security Scan
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
+            Start Security Scan
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Link>
         </div>
       </section>
     </div>

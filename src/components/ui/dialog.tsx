@@ -31,7 +31,9 @@ function Dialog({ open = false, onOpenChange, children }: DialogProps) {
 }
 
 export interface DialogTriggerProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  children?: React.ReactNode;
+}
 
 const DialogTrigger = React.forwardRef<HTMLButtonElement, DialogTriggerProps>(
   ({ onClick, ...props }, ref) => {
