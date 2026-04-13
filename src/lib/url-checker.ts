@@ -207,9 +207,15 @@ function checkPhishingKeywords(url: URL): UrlCheckItem {
   const found: string[] = [];
 
   for (const keyword of PHISHING_KEYWORDS) {
-    // Check if brand names appear in subdomains (e.g., "google.evil.com")
-    if (hostname.includes(keyword) && !hostname.endsWith(keyword + ".com") && !hostname.endsWith(keyword + ".org") && !hostname.endsWith(keyword + ".net")) {
-      found.push(keyword);
+    // Check if brand names appear as subdomain components (e.g., "google.evil.com")
+    // Split hostname into parts and check if keyword appears as a non-primary domain part
+    const parts = hostname.split(".");
+    // If the hostname has subdomains and a brand keyword is in a subdomain (not the main domain)
+    if (parts.length >= 3) {
+      const subdomainParts = parts.slice(0, -2); // everything except the base domain
+      if (subdomainParts.some((part) => part.includes(keyword))) {
+        found.push(keyword);
+      }
     }
   }
 
@@ -217,7 +223,7 @@ function checkPhishingKeywords(url: URL): UrlCheckItem {
   const path = url.pathname.toLowerCase();
   if (/\/(login|signin|verify|confirm|secure|update|password|auth)\b/.test(path)) {
     const match = path.match(/\/(login|signin|verify|confirm|secure|update|password|auth)\b/);
-    if (match && found.indexOf(match[1]) === -1) {
+    if (match && !found.includes(match[1])) {
       found.push(match[1] + " (in path)");
     }
   }

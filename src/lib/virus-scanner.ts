@@ -64,6 +64,11 @@ export const SUPPORTED_EXTENSIONS: string[] = [
 
 export const MAX_FILE_SIZE: number = 20 * 1024 * 1024; // 20 MB
 
+// Thresholds for heuristic and entropy-based detection
+const MALICIOUS_FLAG_THRESHOLD = 3;
+const HIGH_ENTROPY_THRESHOLD = 7.2;
+const MODERATE_ENTROPY_THRESHOLD = 6.5;
+
 // Known malicious SHA-256 hashes from public threat intelligence databases
 const KNOWN_MALICIOUS_HASHES = new Map<string, string>([
   [
@@ -487,12 +492,12 @@ export async function scanFile(
   entropyScore = calculateEntropy(arrayBuffer);
   details.push(`Shannon entropy: ${entropyScore} / 8.0`);
 
-  if (entropyScore > 7.2) {
+  if (entropyScore > HIGH_ENTROPY_THRESHOLD) {
     details.push("High entropy detected — file may be encrypted, packed, or obfuscated");
     if (DANGEROUS_EXTENSIONS.has(extension)) {
       heuristicFlags.push("High-entropy executable — likely packed or encrypted payload");
     }
-  } else if (entropyScore > 6.5) {
+  } else if (entropyScore > MODERATE_ENTROPY_THRESHOLD) {
     details.push("Moderately high entropy — some compression or encoding present");
   } else {
     details.push("Entropy is within normal range");
@@ -507,7 +512,7 @@ export async function scanFile(
 
   // Determine final verdict (hash match takes highest priority)
   if (verdict !== "malicious") {
-    if (heuristicFlags.length >= 3) {
+    if (heuristicFlags.length >= MALICIOUS_FLAG_THRESHOLD) {
       verdict = "malicious";
       details.push("Multiple high-confidence heuristic detections → classified as malicious");
     } else if (heuristicFlags.length >= 1) {

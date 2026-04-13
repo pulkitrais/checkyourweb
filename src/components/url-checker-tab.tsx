@@ -220,7 +220,7 @@ export function UrlCheckerTab() {
                       <p className="text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
                         URL Analyzed
                       </p>
-                      <p className="text-sm font-medium break-all">{result.url}</p>
+                      <p className="text-sm font-medium break-words">{result.url}</p>
                     </div>
                     {result.parsedDomain && (
                       <div>

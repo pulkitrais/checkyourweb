@@ -673,7 +673,9 @@ function checkContentSecurityPolicy(): SecurityCheck {
     };
   }
 
-  // Check for CSP meta tag in the document
+  // Client-side limitation: CSP set via HTTP response headers cannot be detected
+  // from JavaScript. We can only check for CSP defined via <meta> tags. A page
+  // may have a strong server-side CSP header that this check cannot observe.
   const cspMeta = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
   const hasCSP = !!cspMeta;
 
