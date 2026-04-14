@@ -6,6 +6,7 @@ import { Shield, Menu, X } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 const navLinks = [
+  { href: "/dashboard", label: "Dashboard" },
   { href: "/how-it-works", label: "How It Works" },
   { href: "/privacy", label: "Privacy" },
 ];

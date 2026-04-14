@@ -138,10 +138,11 @@ function checkOutdatedBrowser(): SecurityCheck {
     string,
     { latest: number; warning: number; atRisk: number }
   > = {
-    Chrome: { latest: 130, warning: 125, atRisk: 110 },
-    Firefox: { latest: 130, warning: 120, atRisk: 100 },
-    Edge: { latest: 130, warning: 120, atRisk: 100 },
-    Safari: { latest: 17, warning: 16, atRisk: 15 },
+    Chrome: { latest: 136, warning: 130, atRisk: 115 },
+    Firefox: { latest: 138, warning: 130, atRisk: 110 },
+    Edge: { latest: 136, warning: 130, atRisk: 115 },
+    Safari: { latest: 18, warning: 17, atRisk: 16 },
+    Opera: { latest: 118, warning: 110, atRisk: 100 },
   };
 
   const t = thresholds[info.name];
@@ -658,6 +659,90 @@ function checkScreenResolution(): SecurityCheck {
   };
 }
 
+function checkContentSecurityPolicy(): SecurityCheck {
+  if (!isBrowser()) {
+    return {
+      id: "content-security-policy",
+      category: "Connection",
+      name: "Content Security Policy",
+      status: "warning",
+      value: "Unknown (SSR)",
+      description:
+        "Cannot check CSP during server-side rendering.",
+      weight: 7,
+    };
+  }
+
+  // Client-side limitation: CSP set via HTTP response headers cannot be detected
+  // from JavaScript. We can only check for CSP defined via <meta> tags. A page
+  // may have a strong server-side CSP header that this check cannot observe.
+  const cspMeta = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
+  const hasCSP = !!cspMeta;
+
+  return {
+    id: "content-security-policy",
+    category: "Connection",
+    name: "Content Security Policy",
+    status: hasCSP ? "secure" : "warning",
+    value: hasCSP ? "Present (meta tag)" : "Not detected",
+    description: hasCSP
+      ? "A Content Security Policy is set, which helps prevent XSS and data injection attacks."
+      : "No Content Security Policy meta tag detected. CSP may still be set via HTTP headers (not detectable client-side).",
+    recommendation: hasCSP
+      ? undefined
+      : "Implement a strict Content Security Policy to mitigate XSS and injection attacks.",
+    weight: 7,
+  };
+}
+
+function checkReferrerPolicy(): SecurityCheck {
+  if (!isBrowser()) {
+    return {
+      id: "referrer-policy",
+      category: "Privacy",
+      name: "Referrer Policy",
+      status: "warning",
+      value: "Unknown (SSR)",
+      description:
+        "Cannot check Referrer Policy during server-side rendering.",
+      weight: 4,
+    };
+  }
+
+  const rpMeta = document.querySelector('meta[name="referrer"]');
+  const hasRP = !!rpMeta;
+  const rpValue = rpMeta?.getAttribute("content") ?? "";
+  const isStrict = ["no-referrer", "same-origin", "strict-origin", "strict-origin-when-cross-origin"].includes(rpValue.toLowerCase());
+
+  if (!hasRP) {
+    return {
+      id: "referrer-policy",
+      category: "Privacy",
+      name: "Referrer Policy",
+      status: "warning",
+      value: "Not detected (meta tag)",
+      description: "No Referrer Policy meta tag detected. The browser default may leak referrer information to third parties.",
+      recommendation: "Set a strict Referrer Policy (e.g., strict-origin-when-cross-origin) to limit data leakage.",
+      weight: 4,
+    };
+  }
+
+  return {
+    id: "referrer-policy",
+    category: "Privacy",
+    name: "Referrer Policy",
+    status: isStrict ? "secure" : "warning",
+    value: rpValue || "Set but empty",
+    description: isStrict
+      ? `Referrer Policy is set to "${rpValue}", which limits referrer information leakage.`
+      : `Referrer Policy is set to "${rpValue}", which may still leak referrer data.`,
+    recommendation: isStrict
+      ? undefined
+      : 'Consider using a stricter policy like "strict-origin-when-cross-origin" or "no-referrer".',
+    weight: 4,
+  };
+}
+
 // ---- scoring ---------------------------------------------------------------
 
 function calculateScore(checks: SecurityCheck[]): number {
@@ -702,6 +787,8 @@ export async function runBrowserSecurityAudit(): Promise<BrowserSecurityResult> 
     checkFingerprintResistance(),
     checkThirdPartyCookies(),
     checkScreenResolution(),
+    checkContentSecurityPolicy(),
+    checkReferrerPolicy(),
   ];
 
   // Run async checks

@@ -1,11 +1,12 @@
 "use client";
 
 import * as React from "react";
-import { Shield, Bug } from "lucide-react";
+import { Shield, Bug, Link2 } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { SecurityScore } from "@/components/security-score";
 import { BrowserSecurityTab } from "@/components/browser-security-tab";
 import { VirusScannerTab } from "@/components/virus-scanner-tab";
+import { UrlCheckerTab } from "@/components/url-checker-tab";
 import {
   runBrowserSecurityAudit,
   type BrowserSecurityResult,
@@ -44,8 +45,8 @@ export default function DashboardPage() {
           Security Dashboard
         </h1>
         <p className="mt-2 text-gray-500 dark:text-gray-400">
-          Audit your browser security and scan files for threats — 100% private,
-          everything runs locally.
+          Audit your browser security, scan files for threats, and check URL
+          safety — 100% private, everything runs locally.
         </p>
       </div>
 
@@ -56,7 +57,7 @@ export default function DashboardPage() {
 
       {/* Tabs */}
       <Tabs defaultValue="browser-security">
-        <TabsList className="grid w-full grid-cols-2">
+        <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="browser-security">
             <Shield className="mr-1.5 h-4 w-4" />
             Browser Security
@@ -64,6 +65,10 @@ export default function DashboardPage() {
           <TabsTrigger value="virus-scanner">
             <Bug className="mr-1.5 h-4 w-4" />
             Virus Scanner
+          </TabsTrigger>
+          <TabsTrigger value="url-checker">
+            <Link2 className="mr-1.5 h-4 w-4" />
+            URL Checker
           </TabsTrigger>
         </TabsList>
 
@@ -73,6 +78,10 @@ export default function DashboardPage() {
 
         <TabsContent value="virus-scanner">
           <VirusScannerTab />
+        </TabsContent>
+
+        <TabsContent value="url-checker">
+          <UrlCheckerTab />
         </TabsContent>
       </Tabs>
     </main>

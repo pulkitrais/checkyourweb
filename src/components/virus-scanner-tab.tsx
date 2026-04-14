@@ -38,6 +38,7 @@ const SCAN_STEPS = [
   "Checking database…",
   "Verifying file type…",
   "Analyzing content…",
+  "Analyzing entropy…",
   "Compiling results…",
 ];
 
@@ -46,8 +47,9 @@ function stepFromProgress(progress: number): string {
   if (progress < 40) return SCAN_STEPS[1];
   if (progress < 50) return SCAN_STEPS[2];
   if (progress < 60) return SCAN_STEPS[3];
-  if (progress < 90) return SCAN_STEPS[4];
-  return SCAN_STEPS[5];
+  if (progress < 80) return SCAN_STEPS[4];
+  if (progress < 90) return SCAN_STEPS[5];
+  return SCAN_STEPS[6];
 }
 
 function verdictConfig(verdict: ScanResult["verdict"]) {
@@ -183,8 +185,10 @@ export function VirusScannerTab() {
       `File: ${result.fileName}`,
       `Size: ${formatFileSize(result.fileSize)}`,
       `Type: ${result.fileType}`,
+      `Last Modified: ${result.lastModified.toLocaleString()}`,
       `SHA-256: ${result.sha256Hash}`,
       `Magic Bytes Match: ${result.magicBytesMatch ? "Yes" : "No"}`,
+      `Shannon Entropy: ${result.entropyScore} / 8.0`,
       `Scan Duration: ${result.scanDuration}ms`,
     ];
     for (const line of lines) {
@@ -290,7 +294,7 @@ export function VirusScannerTab() {
             <Progress value={progress} />
             <div className="flex flex-col gap-1">
               {SCAN_STEPS.map((step, i) => {
-                const stepThresholds = [0, 10, 40, 50, 60, 90];
+                const stepThresholds = [0, 10, 40, 50, 60, 80, 90];
                 const active = progress >= stepThresholds[i];
                 return (
                   <p
@@ -363,6 +367,29 @@ export function VirusScannerTab() {
                           <Badge variant="success">Match</Badge>
                         ) : (
                           <Badge variant="warning">Mismatch</Badge>
+                        )}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                        Last Modified
+                      </p>
+                      <p className="text-sm font-medium">
+                        {result.lastModified.toLocaleString()}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                        Entropy
+                      </p>
+                      <p className="text-sm font-medium">
+                        {result.entropyScore} / 8.0
+                        {result.entropyScore > 7.2 ? (
+                          <Badge variant="warning" className="ml-2">High</Badge>
+                        ) : result.entropyScore > 6.5 ? (
+                          <Badge variant="secondary" className="ml-2">Moderate</Badge>
+                        ) : (
+                          <Badge variant="success" className="ml-2">Normal</Badge>
                         )}
                       </p>
                     </div>
