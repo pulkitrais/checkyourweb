@@ -307,11 +307,11 @@ export function IpCheckerTab() {
           {/* Action buttons */}
           <div className="flex flex-wrap gap-3">
             <Button onClick={exportPDF} variant="outline">
-              <FileText />
+              <FileText className="h-4 w-4" />
               Download PDF Report
             </Button>
             <Button onClick={reset} variant="secondary">
-              <RotateCcw />
+              <RotateCcw className="h-4 w-4" />
               Check Another IP
             </Button>
           </div>
