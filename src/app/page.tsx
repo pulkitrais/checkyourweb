@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ShieldCheck, Search, Lock, ArrowRight, Zap, CheckCircle, Link2 } from "lucide-react";
+import { ShieldCheck, Search, Lock, ArrowRight, Zap, CheckCircle, Link2, Globe } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -25,6 +25,12 @@ const features = [
     title: "URL Safety Checker",
     description:
       "Analyze any URL for phishing indicators, malicious domains, homograph attacks, and suspicious patterns — before you click.",
+  },
+  {
+    icon: Globe,
+    title: "IP Address Checker",
+    description:
+      "Look up any IPv4 or IPv6 address to check its reputation, detect known malicious ranges, Tor exit nodes, and classify private vs. public addresses.",
   },
   {
     icon: Lock,
@@ -77,7 +83,7 @@ export default function Home() {
           <h1 className="max-w-3xl text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
             Instant Browser Security Check{" "}
             <span className="text-gray-400">
-              + Virus Scanner + URL Checker
+              + Virus Scanner + URL &amp; IP Checker
             </span>
           </h1>
 
@@ -131,7 +137,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
             {features.map((feature) => (
               <Card
                 key={feature.title}
