@@ -1,12 +1,13 @@
 "use client";
 
 import * as React from "react";
-import { Shield, Bug, Link2 } from "lucide-react";
+import { Shield, Bug, Link2, Globe } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { SecurityScore } from "@/components/security-score";
 import { BrowserSecurityTab } from "@/components/browser-security-tab";
 import { VirusScannerTab } from "@/components/virus-scanner-tab";
 import { UrlCheckerTab } from "@/components/url-checker-tab";
+import { IpCheckerTab } from "@/components/ip-checker-tab";
 import {
   runBrowserSecurityAudit,
   type BrowserSecurityResult,
@@ -57,7 +58,7 @@ export default function DashboardPage() {
 
       {/* Tabs */}
       <Tabs defaultValue="browser-security">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4">
           <TabsTrigger value="browser-security">
             <Shield className="mr-1.5 h-4 w-4" />
             Browser Security
@@ -69,6 +70,10 @@ export default function DashboardPage() {
           <TabsTrigger value="url-checker">
             <Link2 className="mr-1.5 h-4 w-4" />
             URL Checker
+          </TabsTrigger>
+          <TabsTrigger value="ip-checker">
+            <Globe className="mr-1.5 h-4 w-4" />
+            IP Checker
           </TabsTrigger>
         </TabsList>
 
@@ -82,6 +87,10 @@ export default function DashboardPage() {
 
         <TabsContent value="url-checker">
           <UrlCheckerTab />
+        </TabsContent>
+
+        <TabsContent value="ip-checker">
+          <IpCheckerTab />
         </TabsContent>
       </Tabs>
     </main>
